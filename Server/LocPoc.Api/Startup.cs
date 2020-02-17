@@ -5,9 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using LocPoc.Contracts;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using System.IO;
-using System;
 using GraphQL;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
@@ -44,21 +41,6 @@ namespace LocPoc.Api
                 });
             });
 
-            services.AddControllers();
-
-            services.AddSwaggerGen(setupAction =>
-            {
-                setupAction.SwaggerDoc("LocPocOpenApiSpecification", new Microsoft.OpenApi.Models.OpenApiInfo()
-                {
-                    Title = "LocPoc API",
-                    Version = "1",
-                    Description = "With this API you can store and fetch location items"
-                });
-                var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
-                setupAction.IncludeXmlComments(xmlCommentsFullPath);
-            });
-
             // Required for GraphQL?
             services.Configure<KestrelServerOptions>(options =>
             {
@@ -86,24 +68,8 @@ namespace LocPoc.Api
 
             app.UseHttpsRedirection();
 
-            app.UseSwagger();
-
-            app.UseSwaggerUI(setupAction =>
-            {
-                setupAction.SwaggerEndpoint("/swagger/LocPocOpenApiSpecification/swagger.json", "LocPoc API");
-                setupAction.RoutePrefix = "";
-            });
-
-            app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseCors(CorsPolicy);
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
 
             app.UseGraphQL<LocPocSchema>();
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());

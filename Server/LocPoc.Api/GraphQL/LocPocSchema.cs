@@ -8,6 +8,7 @@ namespace LocPoc.Api.GraphQL
         public LocPocSchema(IDependencyResolver resolver): base(resolver)
         {
             Query = resolver.Resolve<LocPocQuery>();
+            Mutation = resolver.Resolve<LocPocMutation>();
         }
     }
 }
