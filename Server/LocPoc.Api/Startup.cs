@@ -10,6 +10,7 @@ using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using LocPoc.Api.GraphQL;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using LocPoc.Api.GraphQL.Messaging;
 
 namespace LocPoc.Api
 {
@@ -49,9 +50,12 @@ namespace LocPoc.Api
 
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
             services.AddScoped<LocPocSchema>();
+            services.AddSingleton<LocationMessageService>();
 
             services.AddGraphQL(o => { o.ExposeExceptions = true; })
-                .AddGraphTypes(ServiceLifetime.Scoped);
+                .AddGraphTypes(ServiceLifetime.Scoped)
+                .AddDataLoader()
+                .AddWebSockets();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,7 +74,8 @@ namespace LocPoc.Api
 
 
             app.UseCors(CorsPolicy);
-
+            app.UseWebSockets();
+            app.UseGraphQLWebSockets<LocPocSchema>("/graphql");
             app.UseGraphQL<LocPocSchema>();
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
         }

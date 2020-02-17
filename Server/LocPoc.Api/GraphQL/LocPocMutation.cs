@@ -1,13 +1,13 @@
 ﻿using GraphQL.Types;
 using LocPoc.Api.GraphQL.Types;
-
+using LocPoc.Api.GraphQL.Messaging;
 using LocPoc.Contracts;
 
 namespace LocPoc.Api.GraphQL
 {
     public class LocPocMutation: ObjectGraphType
     {
-        public LocPocMutation(ILocationsRepositoryAsync repository)
+        public LocPocMutation(ILocationsRepositoryAsync repository, LocationMessageService messageService)
         {
             FieldAsync<LocationType>(
                 "createLocation",
@@ -16,8 +16,9 @@ namespace LocPoc.Api.GraphQL
                 resolve: async context =>
                 {
                     var location = context.GetArgument<Location>("location");
-                    return await context.TryAsyncResolve(
-                        async c => await repository.CreateAsync(location));
+                    await repository.CreateAsync(location);
+                    messageService.AddLocationAddedMessage(location);
+                    return location;
                 });
         }
     }

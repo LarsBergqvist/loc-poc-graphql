@@ -24,6 +24,7 @@
     <PackageReference Include="GraphQL" Version="2.4.0" />
     <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="3.4.0" />
     <PackageReference Include="GraphQL.Server.Ui.Playground" Version="3.4.0" />
+    <PackageReference Include="GraphQL.Server.Transports.WebSockets" Version="3.4.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LocPoc.Contracts\LocPoc.Contracts.csproj" />
@@ -33,6 +34,7 @@
     <Folder Include="DTOs\" />
     <Folder Include="GraphQL\" />
     <Folder Include="GraphQL\Types\" />
+    <Folder Include="GraphQL\Messaging\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="locpoc.db" />

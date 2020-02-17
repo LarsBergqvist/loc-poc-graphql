@@ -9,6 +9,7 @@ namespace LocPoc.Api.GraphQL
         {
             Query = resolver.Resolve<LocPocQuery>();
             Mutation = resolver.Resolve<LocPocMutation>();
+            Subscription = resolver.Resolve<LocPocSubscription>();
         }
     }
 }
